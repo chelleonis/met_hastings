@@ -1,37 +1,41 @@
-draw_jump <- function() {
+
+#function(nsims, start, burn_in, jump, jparams,
+         #distr, dparams, likelihood = NULL)
+
+draw_jump <- function(theta_cur, jump = "normal",jparams = 1) {
   if(jump == "normal") {
-    theta_star <- rnorm(1, mean = theta_cur, sd = cand.sd) #figure out this param
+    theta_star <- rnorm(1, mean = theta_cur, sd = jparams) #figure out this param
   }
-  else if (jump == "beta") {
-    theta_star <- rbeta(1, params, params) #need to add params thingy
+  else if (jump == "beta") { 
+    theta_star <- rbeta(1, jparams[1], jparams[2]) #need to add params thingy
   }
   else if (jump == "mvn") {
-    theta_star <- norm(n,mean = theta_cur, sd = cand.sd) #same thing
+    theta_star <- rnorm(n,mean = theta_cur, sd = jparams) #same thing
   }
   else {
-    theta_star <- rnorm(1, mean = theta_cur, sd = cand.sd) #correct sd
+    theta_star <- rnorm(1, mean = theta_cur, sd = jparams) #correct sd
   }
 }
 
-calc_accept <- function(tstar, tcur, params, distr) {
+calc_accept <- function(tstar, tcur,distr, dparams = 1) {
   if(distr == "normal") {
-    accept <- dnorm(tstar, mean = theta_cur, sd = cand.sd) /
-      dnorm(tcur, mean = theta_cur, sd = cand.sd)
+    accept <- dnorm(tstar, mean = tcur, sd = dparams) /
+      dnorm(tcur, mean = tcur, sd = dparams)
   }
   else if (distr == "beta") {
-    accept <- dbeta(tstar, mean = theta_cur, sd = cand.sd) /
-      dbeta(tcur, mean = theta_cur, sd = cand.sd) #need to add params thingy
+    accept <- dbeta(tstar, dparams[1],dparams[2]) /
+      dbeta(tcur, dparams[1],dparams[2]) #need to add params thingy
   }
   else if (distr == "mvn") { #fix 
     theta_star <- norm(n,mean = theta_cur, sd = cand.sd) #same thing
   }
   else if (distr == "gamma") {
-    accept <- dgamma(tstar, mean = theta_cur, sd = cand.sd) /
-      dgamma(tcur, mean = theta_cur, sd = cand.sd)
+    accept <- dgamma(tstar, dparams[1],dparams[2]) /
+      dgamma(tcur, dparams[1],dparams[2])
   }
   else { #default to norm
-    accept <- dnorm(tstar, mean = theta_cur, sd = cand.sd) /
-      dnorm(tcur, mean = theta_cur, sd = cand.sd) #correct sd
+    accept <- dnorm(tstar, mean = tcur, sd = dparams) /
+      dnorm(tcur, mean = tcur, sd = dparams) #correct sd
   }
   
   

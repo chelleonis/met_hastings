@@ -44,15 +44,16 @@ met_hastings <- function(nsims, start, burn_in, jump, jparams,
 #returns vector of your distribution draws
 
 #example:
-#draws <- met_hastings(10000, start = 1, burn_in = 1000, cand.sd = 2,shape = 1.7, rate = 4.4)
+#draws <- met_hastings(10000, start = 1, burn_in = 1000, 
+#   jparams = 2,distr = "gamma",c(1.7,4.4))
 
 #current update_theta is normal jumping with sampling from gamma
 update_theta <- function(theta_cur, jump = "normal", jparams,
                          distr = "normal", dparams) {
   #step 2, draw from jumping distribution (default: normal)
-  theta_star <- draw_jump(jump,jparams) #oh no no need to fix
+  theta_star <- draw_jump(theta_cur,jump,jparams) #oh no no need to fix
   #step 3, compute acceptance (WHEN YOU CAN DO LOG DO LOG)
-  accept_ratio <- calc_accept(theta_star, theta_cur, dparams, distr)
+  accept_ratio <- calc_accept(theta_star, theta_cur, distr,dparams)
   #step 4 acceptance rule
   if (runif(1) <= accept_ratio) {
     return(theta_star)
