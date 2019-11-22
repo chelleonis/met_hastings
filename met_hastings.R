@@ -1,5 +1,5 @@
-#Metropolis-Hastings w/ and w/o burn-in(?)
-# 
+#Metropolis-Hastings Algorithmn (non-adaptive)
+#Random Walk
 #1.) starting theta(0)
 #2.) at iteration t, draw theta* from jumping distr: Jt(theta*|theta(t-1))
 #3.) compute acceptance ratio r = p(theta|y) / Jt(theta* | theta(t-1)) /
@@ -8,35 +8,51 @@
 # if it isn't accepted, theta(t) = theta(t-1)
 #5.) repeat 2-4 M times to get M draws, with burn-in / thinning
 
-#functions to add
-#bayesian confidence interval
-#plotting
+#jumping distributions:
+#normal (default)
+#
 
+#sampling distributions:
+#gamma
+#beta
+#normal
+#custom(?)
 
 #start with gamma, from normal jumping  , then expand
-met_hastings <- function(nsims, start, burn_in, cand.sd, shape, rate) {
+#move to help doc eventually
+#nsim - how many trials
+#start - initial estimate (idk how to derive)
+#burn in - how many trials to throw away (default 0)
+#jump - what is your jump distr, default = normal
+#distr - options: "normal", "gamma", "beta", "logistic", "other"
+#for other, provide your own likelhood
+#params - params for your likelhood
+#likelihood - if choose other, provide a function for your likelhood
+met_hastings <- function(nsims, start, burn_in, jump, jparams,
+                         distr, dparams, likelihood = NULL) {
   #step 1, starting theta
   theta_current <- start
   draws <- rep(NA,nsims) #pre-allocate xd
   #steps 2-4 in update_theta
   #step 5, repeat for preset number of draws
   for (i in 1:nsims) {
-   draws[i] <- theta_current <- update_theta(theta_current, 
-                                             shape = shape,rate = rate,cand.sd)
+   draws[i] <- theta_current <- update_theta(theta_current, jump, jparams,  
+                distr, dparams)
   }
   return(draws[(burn_in + 1):nsims])
 }
+#returns vector of your distribution draws
 
 #example:
-#mh.draws <- mh.gamma(10000, start = 1, burnin = 1000, cand.sd = 2,shape = 1.7, rate = 4.4)
+#draws <- met_hastings(10000, start = 1, burn_in = 1000, cand.sd = 2,shape = 1.7, rate = 4.4)
 
 #current update_theta is normal jumping with sampling from gamma
-update_theta <- function(theta_cur, shape, rate, cand.sd) {
+update_theta <- function(theta_cur, jump = "normal", jparams,
+                         distr = "normal", dparams) {
   #step 2, draw from jumping distribution (default: normal)
-  theta_star <- rnorm(1, mean = theta_cur, sd = cand.sd)
-  #step 3, compute acceptance ratio (can do log)
-  accept_ratio <- dgamma(theta_star, shape = shape, rate = rate)/
-    dgamma(theta_cur, shape = shape, rate = rate)
+  theta_star <- draw_jump(jump,jparams) #oh no no need to fix
+  #step 3, compute acceptance (WHEN YOU CAN DO LOG DO LOG)
+  accept_ratio <- calc_accept(theta_star, theta_cur, dparams, distr)
   #step 4 acceptance rule
   if (runif(1) <= accept_ratio) {
     return(theta_star)
@@ -45,3 +61,5 @@ update_theta <- function(theta_cur, shape, rate, cand.sd) {
       return(theta_cur)
     } 
 }
+
+
