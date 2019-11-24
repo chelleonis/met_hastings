@@ -1,0 +1,11 @@
+Package: mhsim
+Type: Package
+Title: Metropolis Hastings Algorithmn Simulator
+Version: 0.1.0
+Author: Allen Li
+Maintainer: <allenjli@umich.edu>
+Description: Simulates draws using the M-H algorithmn
+License: Commons-Creative
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.0.0

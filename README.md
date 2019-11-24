@@ -1,9 +1,8 @@
 # met_hastings
-metropolis hastings algorithmn package for bios625
+Intuitive Metropolis Hastings Simulation package for bios625
 
-test test test test 
 
-Oh no no PepeLaugh
+
 
 TO DO:
 
@@ -17,4 +16,5 @@ TO DO:
 
 stretch:
 multivariate support
+non-ergodic markov chain support
 customized likelihoods/draws

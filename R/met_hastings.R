@@ -1,5 +1,5 @@
-#Metropolis-Hastings Algorithmn (non-adaptive)
-#Random Walk
+#'Metropolis-Hastings Algorithmn (non-adaptive)
+#'Random Walk
 #1.) starting theta(0)
 #2.) at iteration t, draw theta* from jumping distr: Jt(theta*|theta(t-1))
 #3.) compute acceptance ratio r = p(theta|y) / Jt(theta* | theta(t-1)) /
@@ -10,16 +10,14 @@
 
 #jumping distributions:
 #normal (default)
-#
+#beta 
 
 #sampling distributions:
 #gamma
 #beta
-#normal
+#normal (default)
 #custom(?)
 
-#start with gamma, from normal jumping  , then expand
-#move to help doc eventually
 #nsim - how many trials
 #start - initial estimate (idk how to derive)
 #burn in - how many trials to throw away (default 0)
@@ -28,8 +26,8 @@
 #for other, provide your own likelhood
 #params - params for your likelhood
 #likelihood - if choose other, provide a function for your likelhood
-met_hastings <- function(nsims, start, burn_in, jump, jparams,
-                         distr, dparams, likelihood = NULL) {
+met_hastings <- function(nsims, start = 1, burn_in, jump = "normal", jparams = 1,
+                         distr = "normal", dparams = 1, likelihood = NULL) {
   #step 1, starting theta
   theta_current <- start
   draws <- rep(NA,nsims) #pre-allocate xd
@@ -44,7 +42,7 @@ met_hastings <- function(nsims, start, burn_in, jump, jparams,
 #returns vector of your distribution draws
 
 #example:
-#draws <- met_hastings(10000, start = 1, burn_in = 1000, 
+#draws <- met_hastings(10000, start = 1, burn_in = 1000,
 #   jparams = 2,distr = "gamma",c(1.7,4.4))
 
 #current update_theta is normal jumping with sampling from gamma

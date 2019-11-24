@@ -17,7 +17,7 @@ draw_jump <- function(theta_cur, jump = "normal",jparams = 1) {
   }
 }
 
-calc_accept <- function(tstar, tcur,distr, dparams = 1) {
+calc_accept <- function(tstar, tcur,distr, dparams = 1, lk = NULL) {
   if(distr == "normal") {
     accept <- dnorm(tstar, mean = tcur, sd = dparams) /
       dnorm(tcur, mean = tcur, sd = dparams)
@@ -32,6 +32,9 @@ calc_accept <- function(tstar, tcur,distr, dparams = 1) {
   else if (distr == "gamma") {
     accept <- dgamma(tstar, dparams[1],dparams[2]) /
       dgamma(tcur, dparams[1],dparams[2])
+  }
+  else if(distr == "custom") {
+    accept <- lk(tstar,dparams) / lk(tcur,dparams)
   }
   else { #default to norm
     accept <- dnorm(tstar, mean = tcur, sd = dparams) /
