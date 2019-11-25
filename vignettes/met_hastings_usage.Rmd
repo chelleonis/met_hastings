@@ -1,0 +1,56 @@
+---
+title: "Main Function Usage"
+author: "Allen Li"
+date: "November 25, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#library(met_hastings)
+```
+
+##met_hastings() tutorial
+
+The main function takes in many inputs, which may be confusing at first, so by breaking it down,  
+1. nsims - how many trials you need
+2. start - initial estimate
+3. burn_in how many trials to throw away, default = 0
+4. the jumping distribution and its parameters
+5. the sampling distribution and its parameters 
+5.5. a function containing your likelihood of your sampling distribution
+
+A simple example is given as follows:
+Where we are jumping from N(\theta,2)
+and sampling from \gamma(\alpha = 1.7, \beta = 4.4)
+```{r}
+draws_1 <- met_hastings(nsims = 10000, start = 1, burn_in = 1000, jump = "normal",
+jparams = 2,distr = "gamma",c(1.7,4.4))
+
+tail(draws_1)
+```
+
+The 95% credible interval can be calculated from those draws as follows:
+```{r}
+bayes_CI(draws_1,0.1)
+```
+To demonstrate the usefulness of the Metropolis-Hastings algorithmn, an example with a
+sampling distribution that is hard to sample from is presented as follows,
+where we are sampling from a mixed gaussian distribution:
+
+```{r}
+nn_lk <- function(tstar,params) {
+ lkld <- 0.5*rnorm(1,tstar,params[1]) + 0.5*rnorm(1,0,params[2])
+}
+draws_3 <- met_hastings(nsims = 10000, start = 1, burn_in = 1000,
+distr = "custom", dparams = c(1,100) , likelihood = nn_lk)
+
+plot(draws_3, type = "l",main = "Mixed Gaussian", xlab = "Samples", ylab = "#")
+```
+
+Performance-wise, the code can sample around 10^5 times without major performance issues, compared to other packages.
+
+```{r} 
+system.time(met_hastings(nsims = 100000, start = 1, burn_in = 2500,
+                          distr = "custom", dparams = c(1,100) , likelihood = nn_lk))
+```

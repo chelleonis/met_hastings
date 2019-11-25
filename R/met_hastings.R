@@ -25,7 +25,7 @@
 #'
 #' @return Vector of your post burn-in draws
 #' @examples 
-#' draws_1 <- met_hastings(10000, start = 1, burn_in = 1000,
+#' draws_1 <- met_hastings(nsims = 10000, start = 1, burn_in = 1000, jump = "normal"
 #'   jparams = 2,distr = "gamma",c(1.7,4.4))
 #'   
 #' draws_2 <- met_hastings(nsims = 100000, start = 1, burn_in = 1000, jump = "beta", 
@@ -81,7 +81,7 @@
 #'                          distr = "custom", dparams = c(1,100) , likelihood = nn_lk))
 #' }
 
-met_hastings <- function(nsims, start = 1, burn_in = 0, jump = "normal", jparams = 1,
+met_hastings <- function(nsims = 1000, start = 1, burn_in = 0, jump = "normal", jparams = 1,
                          distr = "normal", dparams = 1, likelihood = NULL) {
   #step 1, starting theta
   theta_current <- start
