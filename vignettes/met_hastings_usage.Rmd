@@ -13,16 +13,16 @@ library(met_hastings)
 ##met_hastings() tutorial
 
 The main function takes in many inputs, which may be confusing at first, so by breaking it down,  
-1. nsims - how many trials you need
-2. start - initial estimate
-3. burn_in how many trials to throw away, default = 0
-4. the jumping distribution and its parameters
-5. the sampling distribution and its parameters 
-5.5. a function containing your likelihood of your sampling distribution
+1. nsims - how many trials you need  
+2. start - initial estimate  
+3. burn_in how many trials to throw away, default = 0  
+4. the jumping distribution and its parameters  
+5. the sampling distribution and its parameters   
+5.5. a function containing your likelihood of your sampling distribution  
 
-A simple example is given as follows:
-Where we are jumping from N(\theta,2)
-and sampling from \gamma(\alpha = 1.7, \beta = 4.4)
+A simple example is given as follows:  
+Where we are jumping from N$(\theta,2)$
+and sampling from $\gamma(\alpha = 1.7, \beta = 4.4)$
 ```{r}
 draws_1 <- met_hastings(nsims = 10000, start = 1, burn_in = 1000, jump = "normal",
 jparams = 2,distr = "gamma",c(1.7,4.4))
