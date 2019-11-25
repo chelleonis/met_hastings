@@ -1,6 +1,5 @@
-
-#function(nsims, start, burn_in, jump, jparams,
-         #distr, dparams, likelihood = NULL)
+#' Functions generating draws and calculating the acceptance ratio
+#' 
 
 draw_jump <- function(theta_cur, jump = "normal",jparams = 1) {
   if(jump == "normal") {
@@ -25,6 +24,10 @@ calc_accept <- function(tstar, tcur,distr, dparams = 1, lk = NULL) {
   else if (distr == "beta") {
     accept <- dbeta(tstar, dparams[1],dparams[2]) /
       dbeta(tcur, dparams[1],dparams[2]) #need to add params thingy
+  }
+  else if (distr == "binomial") {
+    accept <- dbinom(floor(tstar), dparams[1], dparams[2]) /
+      dbinom(floor(tcur), dparams[1], dparams[2])
   }
   else if (distr == "mvn") { #fix 
     theta_star <- norm(n,mean = theta_cur, sd = cand.sd) #same thing

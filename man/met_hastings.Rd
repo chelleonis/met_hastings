@@ -2,13 +2,12 @@
 % Please edit documentation in R/met_hastings.R
 \name{met_hastings}
 \alias{met_hastings}
-\title{Metropolis-Hastings Algorithmn (non-adaptive)
-Random Walk}
+\title{Metropolis-Hastings Algorithmn Random Walk (non-adaptive)}
 \usage{
 met_hastings(
   nsims,
   start = 1,
-  burn_in,
+  burn_in = 0,
   jump = "normal",
   jparams = 1,
   distr = "normal",
@@ -16,7 +15,33 @@ met_hastings(
   likelihood = NULL
 )
 }
+\arguments{
+\item{nsims}{- how many trials}
+
+\item{start}{- initial estimate}
+
+\item{burn_in}{- how many trials to throw away, default = 0}
+
+\item{jump}{- what is your jump distribution, default = normal
+options: normal, beta}
+
+\item{jparams}{- options for chosen jumping distr, default for normal: variance = 1}
+
+\item{distr}{- what distribution you are sampling from
+options: "normal", "gamma", "beta", "logistic", "custom". 
+If other is selected, user should provide a likelihood function (see example) and parameters}
+
+\item{dparams}{- params for your sampling distribution or likelihood}
+
+\item{likelihood}{- if choose other, provide a function for your likelhood}
+}
 \description{
-Metropolis-Hastings Algorithmn (non-adaptive)
-Random Walk
+1.) Choose a starting \[\theta^(0)\] \\
+2.) At iteration t, draw \[\theta^*\] from jumping distribution: 
+\[J_t(\theta^* | \theta^(t-1)) \] \\
+3.) compute acceptance ratio r = p(theta|y) / Jt(theta* | theta(t-1)) /
+p(theta(t-1)|y / Jt(theta(t-1)|theta*) \\
+4.) Accept theta* as theta(t) w/ prob min(r,1), 
+if it isn't accepted, theta(t) = theta(t-1) \\
+5.) repeat 2-4 M times to get M draws, thinning out \\
 }
