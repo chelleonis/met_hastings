@@ -48,7 +48,7 @@ distr = "custom", dparams = c(1,100) , likelihood = nn_lk)
 plot(draws_3, type = "l",main = "Mixed Gaussian", xlab = "Samples", ylab = "#")
 ```
 
-Performance-wise, the code can sample around 10^5 times without major performance issues, compared to other packages.
+Performance-wise, the code can sample around 10^5 times without major performance issues, compared to other packages. As detailed in the help document, since there are no comparable rpackages to my knowledge, equivalence is unfortunately not testable. To show that the code is fast for its intended use, a crude performance check is done as follows: 
 
 ```{r} 
 system.time(met_hastings(nsims = 100000, start = 1, burn_in = 2500,
