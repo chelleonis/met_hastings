@@ -1,5 +1,10 @@
 #' Functions generating draws and calculating the acceptance ratio
-#' 
+#' @usage 
+#' To structure your jumping or distribution parameters, look at how the function 
+#' e.g. for a normal distribution, jparams = (your standard deviation)
+#' If using a custom structure, the likelihood parameters should be passed to dparams
+#' and the likelihood function should include input for theta
+#' See example #3 in the main function for assisstence in structuring your likelihood function
 
 draw_jump <- function(theta_cur, jump = "normal",jparams = 1) {
   if(jump == "normal") {

@@ -4,6 +4,9 @@
 #' @return Lower and upper bounds of the $\alpha$ interval
 
 #' @examples 
+#'   
+#' 95% credible interval for our draws in example #1
+#' 
 #' out <- met_hastings(10000, start = 1, burn_in = 1000,
 #'   jparams = 2,distr = "gamma",c(1.7,4.4))
 #' bayes_CI(out, 0.1)
