@@ -35,7 +35,7 @@ calc_accept <- function(tstar, tcur,distr, dparams = 1, lk = NULL) {
       dbinom(floor(tcur), dparams[1], dparams[2])
   }
   else if (distr == "mvn") { #fix 
-    theta_star <- norm(n,mean = theta_cur, sd = cand.sd) #same thing
+    theta_star <- dnorm(n,mean = theta_cur, sd = cand.sd) #same thing
   }
   else if (distr == "gamma") {
     accept <- dgamma(tstar, dparams[1],dparams[2]) /
