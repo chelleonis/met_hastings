@@ -2,7 +2,7 @@
 #' @param mh_output - vector output from met_hastings function
 #' @param alpha - value of bounds, calculated as alpha, 1-alpha/2
 #' @return Lower and upper bounds of the alpha interval
-
+#' @export
 #' @examples 
 #'   
 #' 95% credible interval for our draws in example #1

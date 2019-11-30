@@ -5,7 +5,7 @@
 #' If using a custom structure, the likelihood parameters should be passed to dparams
 #' and the likelihood function should include input for theta
 #' See example #3 in the main function for assisstence in structuring your likelihood function
-
+#' @export
 draw_jump <- function(theta_cur, jump = "normal",jparams = 1) {
   if(jump == "normal") {
     theta_star <- rnorm(1, mean = theta_cur, sd = jparams) #figure out this param

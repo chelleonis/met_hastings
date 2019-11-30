@@ -81,6 +81,7 @@
 #'                          distr = "custom", dparams = c(1,100) , likelihood = nn_lk))
 #' }
 
+#' @export
 met_hastings <- function(nsims = 1000, start = 1, burn_in = 0, jump = "normal", jparams = 1,
                          distr = "normal", dparams = 1, likelihood = NULL) {
   #step 1, starting theta
