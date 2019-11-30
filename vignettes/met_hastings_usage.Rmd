@@ -2,7 +2,7 @@
 title: "Main Function Usage"
 author: "Allen Li"
 date: "November 25, 2019"
-output: html_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{met_hastings_usage}
   %\VignetteEngine{knitr::rmarkdown}
