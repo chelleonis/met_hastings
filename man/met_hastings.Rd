@@ -5,7 +5,7 @@
 \title{Metropolis-Hastings Algorithmn Random Walk (non-adaptive)}
 \usage{
 met_hastings(
-  nsims,
+  nsims = 1000,
   start = 1,
   burn_in = 0,
   jump = "normal",
@@ -50,7 +50,7 @@ if it isn't accepted, \eqn{\theta(t) = \theta(t-1)} \cr
 5.) repeat steps 2-4 nsim times \cr
 }
 \examples{
-draws_1 <- met_hastings(10000, start = 1, burn_in = 1000,
+draws_1 <- met_hastings(nsims = 10000, start = 1, burn_in = 1000, jump = "normal"
   jparams = 2,distr = "gamma",c(1.7,4.4))
   
 draws_2 <- met_hastings(nsims = 100000, start = 1, burn_in = 1000, jump = "beta", 

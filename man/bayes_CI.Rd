@@ -9,10 +9,10 @@ bayes_CI(mh_output, alpha)
 \arguments{
 \item{mh_output}{- vector output from met_hastings function}
 
-\item{alpha}{- value of bounds, calculated as $\alpha$, 1-$\alpha$/2}
+\item{alpha}{- value of bounds, calculated as alpha, 1-alpha/2}
 }
 \value{
-Lower and upper bounds of the $\alpha$ interval
+Lower and upper bounds of the alpha interval
 }
 \description{
 Creation of Bayesian Credible Interval from MH Samples
