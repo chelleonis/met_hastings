@@ -3,11 +3,15 @@ title: "Main Function Usage"
 author: "Allen Li"
 date: "November 25, 2019"
 output: html_document
+vignette: >
+  %\VignetteIndexEntry{met_hastings_usage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
+library(mhsim)
 knitr::opts_chunk$set(echo = TRUE)
-library(met_hastings)
 ```
 
 ##met_hastings() tutorial
