@@ -14,11 +14,11 @@ To install and launch the package, follow the code below:
 install.packages("devtools")
 library(devtools)
 install_github("chelleonis/met_hastings", build_vignettes = TRUE, force = TRUE)
-library(met_hastings)
+library(mhsim)
 ```
 
 To build the vignette, 
 
 ```r
-browseVignettes("met_hastings")
+browseVignettes("mhsim")
 ```
