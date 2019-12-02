@@ -100,3 +100,5 @@ slopes <- met_hastings(nsims = 150, start = c(1,1), burn_in = 0,
 plot(slopes[,1], type = "l", main = "Intercept (b0) Draws")
 plot(slopes[,2], type = "l", main = "Slope (b1) Draws")
 ```
+
+
