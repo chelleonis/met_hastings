@@ -1,5 +1,5 @@
 ---
-title: "Linear Regression Example"
+title: "Simple Linear Regression Example"
 author: "Allen Li"
 date: "December 1, 2019"
 output: rmarkdown::html_vignette
@@ -12,9 +12,6 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-# Simple Linear Regression Example
-
 ## Main Goal: Estimate parameters using the M-H algorithm
 
 ### Setup Part 1
@@ -51,21 +48,14 @@ prior <- function(b0_star, b1_star, b0_params=c(2,10), b1_params=c(0,10)){
   b1_prior <- log(dnorm(b1_star, b1_params[1], b1_params[2]))
   return(b0_prior + b1_prior)
 }
-```
 
-
-$\prod_{x=1}^{n} f(x)$
-```{r}
 #Create Likelihood Function
 loglk <- function(b0,b1,xdat,ydat){
   y_pred <- b0 + b1*xdat
   lglk <- log(dnorm(ydat, mean=y_pred, sd=5))
   return(sum(lglk))
 }
-```
 
-
-```{r}
 #1 = b0, 2 = b1
 posterior <- function(params, data){ 
   lglk <- loglk(params[1], params[2], data[,1],data[,2])

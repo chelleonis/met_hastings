@@ -12,6 +12,5 @@
 #' bayes_CI(out, 0.1)
 
 bayes_CI <- function(mh_output, alpha) {
-  hi <- apply(mh_output,2,quantile,probs = c(alpha/2,1-alpha/2))
-  return(hi)
+  quantile(mh_output, probs = c(alpha/2,1-alpha/2))
 }
