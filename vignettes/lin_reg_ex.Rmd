@@ -1,0 +1,102 @@
+---
+title: "Linear Regression Example"
+author: "Allen Li"
+date: "December 1, 2019"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{lin_reg_ex}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Simple Linear Regression Example
+
+## Main Goal: Estimate parameters using the M-H algorithm
+
+### Setup Part 1
+
+We will simulate the data for:   
+Y = $\beta_0$ + $\beta_1$*X
+```{r,fig.height = 4, fig.width = 6}
+library(ggplot2)
+library(mhsim)
+set.seed(682)
+#setup parameters
+b0 = 6 
+b1 = 2
+
+n = 1000
+xsim = runif(n,-10,10)
+ysim = b0 + b1*xsim + rnorm(n,0,10) #adding random noise 
+
+qplot(xsim,ysim, main = "Simulated data for  y = 2x + 6")
+```
+
+## Setup part 2
+
+### Creation of posterior distribution
+
+Foundation of Bayes:  
+
+$Posterior \sim Prior * Likelihood$
+
+```{r}
+#Create prior distribution
+prior <- function(b0_star, b1_star, b0_params=c(2,10), b1_params=c(0,10)){
+  b0_prior <- log(dnorm(b0_star, b0_params[1], b0_params[2]))
+  b1_prior <- log(dnorm(b1_star, b1_params[1], b1_params[2]))
+  return(b0_prior + b1_prior)
+}
+```
+
+
+$\prod_{x=1}^{n} f(x)$
+```{r}
+#Create Likelihood Function
+loglk <- function(b0,b1,xdat,ydat){
+  y_pred <- b0 + b1*xdat
+  lglk <- log(dnorm(ydat, mean=y_pred, sd=5))
+  return(sum(lglk))
+}
+```
+
+
+```{r}
+#1 = b0, 2 = b1
+posterior <- function(params, data){ 
+  lglk <- loglk(params[1], params[2], data[,1],data[,2])
+  lgprior <- prior(params[1], params[2])
+  return(lglk + lgprior)
+}
+```
+
+## Perform M-H Algorithm
+
+```{r}
+slope_estimates <- met_hastings(nsims = 10000, start = c(1,1), burn_in = 2000,
+             jump = "mvn", jparams = c(0.5,0.5),
+             distr = "custom", dparams = matrix(c(xsim,ysim),ncol = 2) , likelihood = posterior)
+```       
+
+Compare results to true Estimates:  
+
+```{r,fig.height = 4, fig.width = 6}
+mean(slope_estimates[,1]) #b0
+mean(slope_estimates[,2]) #b1
+
+lm(ysim ~ xsim)$coefficients
+```
+
+Plots of our draws (without burn-in)  
+
+```{r, echo = FALSE, fig.height = 3, fig.width = 5}
+slopes <- met_hastings(nsims = 150, start = c(1,1), burn_in = 0,
+             jump = "mvn", jparams = c(0.5,0.5),
+             distr = "custom", dparams = matrix(c(xsim,ysim),ncol = 2) , likelihood = posterior)
+plot(slopes[,1], type = "l", main = "Intercept (b0) Draws")
+plot(slopes[,2], type = "l", main = "Slope (b1) Draws")
+```
