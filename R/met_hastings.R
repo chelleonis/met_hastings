@@ -85,15 +85,16 @@
 met_hastings <- function(nsims = 1000, start = 1, burn_in = 0, jump = "normal", jparams = 1,
                          distr = "normal", dparams = 1, likelihood = NULL) {
   #step 1, starting theta
+  cols = length(start)
   theta_current <- start
-  draws <- rep(NA,nsims) #pre-allocate xd
+  draws <- matrix(rep(NA,(nsims+1)*cols), ncol = cols)
   #steps 2-4 in update_theta
   #step 5, repeat for preset number of draws
   for (i in 1:nsims) {
-   draws[i] <- theta_current <- update_theta(theta_current, jump, jparams,  
+   draws[i,] <- theta_current <- update_theta(theta_current, jump, jparams,  
                 distr, dparams, likelihood)
   }
-  return(draws[(burn_in + 1):nsims])
+  return(draws[(burn_in + 1):nsims,])
 }
 
 

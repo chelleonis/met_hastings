@@ -14,7 +14,7 @@ draw_jump <- function(theta_cur, jump = "normal",jparams = 1) {
     theta_star <- rbeta(1, jparams[1], jparams[2]) #need to add params thingy
   }
   else if (jump == "mvn") {
-    theta_star <- rnorm(n,mean = theta_cur, sd = jparams) #same thing
+    theta_star <- rnorm(length(jparams),mean = theta_cur, sd = jparams)
   }
   else {
     theta_star <- rnorm(1, mean = theta_cur, sd = jparams) #correct sd
@@ -42,6 +42,9 @@ calc_accept <- function(tstar, tcur,distr, dparams = 1, lk = NULL) {
       dgamma(tcur, dparams[1],dparams[2])
   }
   else if(distr == "custom") {
+    accept <- lk(tstar,dparams)-lk(tcur,dparams)
+  }
+  else if(distr == "custom2") {
     accept <- lk(tstar,dparams) / lk(tcur,dparams)
   }
   else { #default to norm
