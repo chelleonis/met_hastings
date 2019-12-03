@@ -43,7 +43,7 @@ calc_accept <- function(tstar, tcur,distr, dparams = 1, lk = NULL) {
       dgamma(tcur, dparams[1],dparams[2])
   }
   else if(distr == "custom") {
-    accept <- lk(tstar,dparams)-lk(tcur,dparams)
+    accept <- exp(lk(tstar,dparams)-lk(tcur,dparams))
   }
   else if(distr == "custom2") {
     accept <- lk(tstar,dparams) / lk(tcur,dparams)
