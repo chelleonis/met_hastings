@@ -82,34 +82,42 @@
 #' }
 
 #' @export
+
+
 met_hastings <- function(nsims = 1000, start = 1, burn_in = 0, jump = "normal", jparams = 1,
                          distr = "normal", dparams = 1, likelihood = NULL) {
   #step 1, starting theta
   cols = length(start)
   theta_current <- start
   draws <- matrix(rep(NA,(nsims+1)*cols), ncol = cols)
+  #create an empty vector to store whether a proposed theta has been accepted or not
+  accept <- matrix(rep(NA,(nsims+1)*cols), ncol = cols)
   #steps 2-4 in update_theta
   #step 5, repeat for preset number of draws
   for (i in 1:nsims) {
-   draws[i,] <- theta_current <- update_theta(theta_current, jump, jparams,  
-                distr, dparams, likelihood)
+   theta_current <- update_theta(theta_current, jump, jparams,  
+                distr, dparams, likelihood, accept)
+   draws[i,] <- theta_current[1:cols]
+   accept[i] <- theta_current[cols:cols+1] 
   }
+  
+  print(paste0("Acceptance Rate: ", sum(accept)/nsims))
   return(draws[(burn_in + 1):nsims,])
 }
 
 
 update_theta <- function(theta_cur, jump = "normal", jparams,
-                         distr = "normal", dparams, likelihood = NULL) {
+                         distr = "normal", dparams, likelihood = NULL, accept) {
   #step 2, draw from jumping distribution
   theta_star <- draw_jump(theta_cur,jump,jparams)
   #step 3, compute acceptance
   accept_ratio <- calc_accept(theta_star, theta_cur, distr,dparams, lk = likelihood)
-  #step 4 acceptance rule
+  #step 4 acceptance rule 
   if (runif(1) <= accept_ratio) {
-    return(theta_star)
+    return(c(theta_star,1))
   }
     else {
-      return(theta_cur)
+      return(c(theta_cur,0))
     } 
 }
 
