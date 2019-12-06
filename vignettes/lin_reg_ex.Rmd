@@ -17,20 +17,21 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Setup Part 1
 
 We will simulate the data for:   
-Y = $\beta_0$ + $\beta_1$*X
+$Y = \beta_0 + \beta_1*X_i + \beta_2*X_i$
 ```{r,fig.height = 4, fig.width = 6}
-library(ggplot2)
 library(mhsim)
 set.seed(682)
 #setup parameters
 b0 = 6 
 b1 = 2
+b2 = -0.5
 
 n = 1000
 xsim = runif(n,-10,10)
-ysim = b0 + b1*xsim + rnorm(n,0,10) #adding random noise 
+xsim2 = runif(n,-15,15)
+ysim = b0 + b1*xsim + b2*xsim2 + rnorm(n,0,10) #adding random noise 
 
-qplot(xsim,ysim, main = "Simulated data for  y = 2x + 6")
+plot(xsim,ysim, main = "Simulated data")
 ```
 
 ## Setup part 2
@@ -42,34 +43,36 @@ Foundation of Bayes:
 $Posterior \sim Prior * Likelihood$
 
 ```{r}
-#Create prior distribution
-prior <- function(b0_star, b1_star, b0_params=c(2,10), b1_params=c(0,10)){
+#create a prior distribution
+prior <- function(b0_star, b1_star, b2_star, b0_params=c(0,5), b1_params=c(0,10), 
+                  b2_params=c(-10,10)){
   b0_prior <- log(dnorm(b0_star, b0_params[1], b0_params[2]))
-  b1_prior <- log(dnorm(b1_star, b1_params[1], b1_params[2]))
-  return(b0_prior + b1_prior)
+  b1_prior <- log(dunif(b1_star, b1_params[1], b1_params[2]))
+  b2_prior <- log(dunif(b2_star, b2_params[1], b2_params[2]))
+  return(b0_prior + b1_prior + b2_prior)
 }
-
-#Create Likelihood Function
-loglk <- function(b0,b1,xdat,ydat){
-  y_pred <- b0 + b1*xdat
-  lglk <- log(dnorm(ydat, mean=y_pred, sd=5))
+#likelihood 
+loglk <- function(b0,b1,b2,xdat,xdat2,ydat){
+  y_pred <- b0 + b1*xdat + b2*xdat2
+  lglk <- log(dnorm(ydat, mean=y_pred, sd=10)) 
   return(sum(lglk))
 }
-
-#1 = b0, 2 = b1
+#posterior ~ prior * likelihood
+#1 = b0, 2 = b1, 3 = b2
 posterior <- function(params, data){ 
-  lglk <- loglk(params[1], params[2], data[,1],data[,2])
-  lgprior <- prior(params[1], params[2])
+  lglk <- loglk(params[1], params[2], params[3], data[,1],data[,2],data[,3])
+  lgprior <- prior(params[1], params[2], params[3])
   return(lglk + lgprior)
 }
+
 ```
 
 ## Perform M-H Algorithm
 
 ```{r}
-slope_estimates <- met_hastings(nsims = 10000, start = c(1,1), burn_in = 2000,
-             jump = "mvn", jparams = c(0.5,0.5),
-             distr = "custom", dparams = matrix(c(xsim,ysim),ncol = 2) , likelihood = posterior)
+slope_estimates <- met_hastings(nsims = 10000, start = c(1,1,1), burn_in = 2000,
+             jump = "mvn", jparams = diag(3),
+             distr = "custom", dparams = matrix(c(xsim,xsim2,ysim),ncol = 3) , likelihood = posterior)
 ```       
 
 Compare results to true Estimates:  
@@ -77,18 +80,20 @@ Compare results to true Estimates:
 ```{r,fig.height = 4, fig.width = 6}
 mean(slope_estimates[,1]) #b0
 mean(slope_estimates[,2]) #b1
+mean(slope_estimates[,3]) #b2
 
-lm(ysim ~ xsim)$coefficients
+lm(ysim ~ xsim + xsim2)$coefficients
 ```
 
 Plots of our draws (without burn-in)  
 
 ```{r, echo = FALSE, fig.height = 3, fig.width = 5}
-slopes <- met_hastings(nsims = 150, start = c(1,1), burn_in = 0,
-             jump = "mvn", jparams = 0.5*diag(2),
-             distr = "custom", dparams = matrix(c(xsim,ysim),ncol = 2) , likelihood = posterior)
+slopes <- met_hastings(nsims = 5000, start = c(1,1,1), burn_in = 0,
+             jump = "mvn", jparams = diag(3),
+             distr = "custom", dparams = matrix(c(xsim,xsim2,ysim),ncol = 3) , likelihood = posterior)
 plot(slopes[,1], type = "l", main = "Intercept (b0) Draws")
 plot(slopes[,2], type = "l", main = "Slope (b1) Draws")
+plot(slopes[,3], type = "l", main = "Slope (b2) Draws")
 ```
 
 
