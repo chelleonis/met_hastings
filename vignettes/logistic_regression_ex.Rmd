@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(mhsim)
 ```
 
-##Raw solution to Hoff Problem 10.2(a-c)
+## Raw solution to Hoff Problem 10.2(a-c)
 
 ```{r}
 sparrow <- read.table("msparrownest.dat.txt", header = FALSE)
