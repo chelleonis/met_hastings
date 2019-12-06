@@ -109,7 +109,7 @@ met_hastings <- function(nsims = 1000, start = 1, burn_in = 0, jump = "normal", 
    draws[i,] <- theta_current
    }
    #step 5, repeat for preset number of draws
-  print(paste0("Acceptance Rate: ", naccept))
+  print(paste0("Acceptance Rate: ", naccept/(nsims-burn_in)))
   return(draws[(burn_in + 1):nsims,])
 }
 
