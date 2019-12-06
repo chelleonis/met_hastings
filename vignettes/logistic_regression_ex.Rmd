@@ -4,7 +4,7 @@ author: "Allen Li"
 date: "December 6, 2019"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{lin_reg_ex}
+  %\VignetteIndexEntry{logistic_regression_ex}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
