@@ -16,7 +16,7 @@ draw_jump <- function(theta_cur, jump = "normal",jparams = 1) {
     theta_star <- rbeta(1, jparams[1], jparams[2]) #need to add params thingy
   }
   else if (jump == "mvn") {
-    theta_star <- rnorm(length(jparams),mean = theta_cur, sd = jparams)
+    theta_star <- mvrnorm(1,theta_cur,jparams)
   }
   else {
     theta_star <- rnorm(1, mean = theta_cur, sd = jparams) #correct sd
@@ -37,7 +37,7 @@ calc_accept <- function(tstar, tcur,distr, dparams = 1, lk = NULL) {
       dbinom(floor(tcur), dparams[1], dparams[2])
   }
   else if (distr == "mvn") {
-    theta_star <- dnorm(n,mean = theta_cur, sd = cand.sd) #same thing
+    theta_star <- mvrnorm(1,theta_cur,sd = dparams)#same thing
   }
   else if (distr == "gamma") {
     accept <- dgamma(tstar, dparams[1],dparams[2]) /

@@ -43,7 +43,7 @@
 #'@examples benchmark against MHAdaptive
 #'Note: Since there are no comparable rpackages, equivalence is unfortunately not 
 #'testable. To show that the code is fast for its intended use, a crude performance
-#'check is done as follows: 
+#'check is done as follows: (Rstan tbd)
 #' \dontrun{
 #' MHadaptive example
 #' install.packages(MHadaptive)
@@ -91,35 +91,26 @@ met_hastings <- function(nsims = 1000, start = 1, burn_in = 0, jump = "normal", 
   theta_current <- start
   draws <- matrix(rep(NA,(nsims+1)*cols), ncol = cols)
   #create an empty vector to store whether a proposed theta has been accepted or not
-  naccept <- rep(NA,nsims-burn_in)
+  naccept <- 0
   #steps 2-4 in update_theta
-  #step 5, repeat for preset number of draws
   for (i in 1:nsims) {
-   theta_current <- update_theta(theta_current[1:cols], jump, jparams,  
-                distr, dparams, likelihood, naccept)
-   draws[i,] <- theta_current[1:cols]
-   if(i > burn_in) {
-    naccept[i-burn_in] <- theta_current[cols:cols+1] 
+   #step 2, draw from jumping distribution
+   theta_star <- draw_jump(theta_current,jump,jparams)
+   #step 3, compute acceptanced
+   accept_ratio <- calc_accept(theta_star, theta_current, 
+                               distr,dparams, lk = likelihood)
+   #step 4 acceptance rule 
+   if (runif(1) <= accept_ratio) {
+     theta_current <- theta_star
+     if(i > burn_in) {
+       naccept = naccept + 1
+     }
    }
-  }
-  print(paste0("Acceptance Rate: ", sum(naccept)/(nsims-burn_in)))
+   draws[i,] <- theta_current
+   }
+   #step 5, repeat for preset number of draws
+  print(paste0("Acceptance Rate: ", naccept/(nsims-burn_in)))
   return(draws[(burn_in + 1):nsims,])
-}
-
-
-update_theta <- function(theta_cur, jump = "normal", jparams,
-                         distr = "normal", dparams, likelihood = NULL, accept) {
-  #step 2, draw from jumping distribution
-  theta_star <- draw_jump(theta_cur,jump,jparams)
-  #step 3, compute acceptance
-  accept_ratio <- calc_accept(theta_star, theta_cur, distr,dparams, lk = likelihood)
-  #step 4 acceptance rule 
-  if (runif(1) <= accept_ratio) {
-    return(c(theta_star,1))
-  }
-    else {
-      return(c(theta_cur,0))
-    } 
 }
 
 
