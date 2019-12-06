@@ -68,7 +68,7 @@ distr = "custom", dparams = c(1,100) , likelihood = nn_lk)
 benchmark against MHAdaptive
 Note: Since there are no comparable rpackages, equivalence is unfortunately not 
 testable. To show that the code is fast for its intended use, a crude performance
-check is done as follows: 
+check is done as follows: (Rstan tbd)
 \dontrun{
 MHadaptive example
 install.packages(MHadaptive)

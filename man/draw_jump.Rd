@@ -7,7 +7,8 @@
 To structure your jumping or distribution parameters, look at how the function 
 e.g. for a normal distribution, jparams = (your standard deviation)
 If using a custom structure, the likelihood parameters should be passed to dparams
-and the likelihood function should include input for theta
+and the likelihood function should include input for theta. (Note custom2 is for 
+non log calculation of the ratio, not reccomended as you can divide by 0)
 See example #3 in the main function for assisstence in structuring your likelihood function
 }
 \description{
