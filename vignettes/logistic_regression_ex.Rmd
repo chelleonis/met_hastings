@@ -17,7 +17,7 @@ library(mhsim)
 ##Raw solution to Hoff Problem 10.2(a-c)
 
 ```{r}
-sparrow <- read.table("~/met_hastings/data/msparrownest.dat.txt", header = FALSE)
+sparrow <- read.table("msparrownest.dat.txt", header = FALSE)
 #read in data
 set.seed(682)
 sdata <- as.matrix(sparrow)
