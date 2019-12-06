@@ -1,0 +1,61 @@
+---
+title: "Logistic Regression Example"
+author: "Allen Li"
+date: "December 6, 2019"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{lin_reg_ex}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(mhsim)
+```
+
+##Raw solution to Hoff Problem 10.2(a-c)
+
+```{r}
+sparrow <- read.table("~/met_hastings/data/msparrownest.dat.txt", header = FALSE)
+#read in data
+set.seed(682)
+sdata <- as.matrix(sparrow)
+# Yi = logit(Pr Yi = 1 | alpha, beta, xi) = alpha + beta*xi
+# logit (theta) = log( theta/(1-theta) )
+ydat <- sdata[,1]
+xdat <- cbind(rep(1,length(ydat)),sdata[,2])
+
+#prior Pr(Y = 1 | alpha, beta, xi) 
+prior_fxn <- function(theta_star, mean_params = c(0,0), sd_params = c(5,.5)) { #do normal init
+  sum(dnorm(theta_star, mean_params,sd_params, log = TRUE))
+}
+
+#likelihood rename vars 
+loglk_beta <- function(theta_star,data) {
+  main_lg <- exp(data[,1:2] %*% theta_star)
+  prob = main_lg/ (1 + main_lg)
+  test <- sum(dbinom(data[,3],1,prob,log=TRUE))
+  return(test)
+}
+#posterior -> approximating ALPHA AND BETA given x,y
+post_fxn <- function(params,data) {
+  lglk <- loglk_beta(params,data)
+  lgprior <- prior_fxn(params)
+  return(lglk+lgprior)
+}
+
+jump_var_matrix <- 5*solve(t(xdat) %*% xdat)
+
+sims <- met_hastings(nsims = 10000, start = c(0,0), burn_in = 2000,
+                     jump = "mvn", jparams = jump_var_matrix,
+                     distr = "custom", dparams = matrix(c(xdat,ydat), ncol = 3),
+                     likelihood = post_fxn
+                     )
+
+mean(sims[,1])
+mean(sims[,2])
+
+plot(sims[,1],type = "l")
+plot(sims[,1],type = "l")
+```
