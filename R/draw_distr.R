@@ -7,6 +7,9 @@
 #' non log calculation of the ratio, not reccomended as you can divide by 0)
 #' See example #3 in the main function for assisstence in structuring your likelihood function
 #' @export
+#' 
+library(MASS)
+
 draw_jump <- function(theta_cur, jump = "normal",jparams = 1) {
   if(jump == "normal") {
     theta_star <- rnorm(1, mean = theta_cur, sd = jparams)
