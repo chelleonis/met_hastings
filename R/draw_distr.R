@@ -8,7 +8,6 @@
 #' See example #3 in the main function for assisstence in structuring your likelihood function
 #' @export
 #' 
-library(MASS)
 
 draw_jump <- function(theta_cur, jump = "normal",jparams = 1) {
   if(jump == "normal") {
@@ -19,7 +18,7 @@ draw_jump <- function(theta_cur, jump = "normal",jparams = 1) {
     theta_star <- rbeta(1, jparams[1], jparams[2]) #need to add params thingy
   }
   else if (jump == "mvn") {
-    theta_star <- mvrnorm(1,theta_cur,jparams)
+    theta_star <- MASS::mvrnorm(1,theta_cur,jparams)
   }
   else {
     theta_star <- rnorm(1, mean = theta_cur, sd = jparams) #correct sd
@@ -40,7 +39,7 @@ calc_accept <- function(tstar, tcur,distr, dparams = 1, lk = NULL) {
       dbinom(floor(tcur), dparams[1], dparams[2])
   }
   else if (distr == "mvn") {
-    theta_star <- mvrnorm(1,theta_cur,sd = dparams)#same thing
+    theta_star <- MASS::mvrnorm(1,theta_cur,sd = dparams)#same thing
   }
   else if (distr == "gamma") {
     accept <- dgamma(tstar, dparams[1],dparams[2]) /
