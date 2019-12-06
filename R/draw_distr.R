@@ -9,7 +9,8 @@
 #' @export
 draw_jump <- function(theta_cur, jump = "normal",jparams = 1) {
   if(jump == "normal") {
-    theta_star <- rnorm(1, mean = theta_cur, sd = jparams) #figure out this param
+    theta_star <- rnorm(1, mean = theta_cur, sd = jparams)
+    return(theta_star)
   }
   else if (jump == "beta") { 
     theta_star <- rbeta(1, jparams[1], jparams[2]) #need to add params thingy
@@ -35,7 +36,7 @@ calc_accept <- function(tstar, tcur,distr, dparams = 1, lk = NULL) {
     accept <- dbinom(floor(tstar), dparams[1], dparams[2]) /
       dbinom(floor(tcur), dparams[1], dparams[2])
   }
-  else if (distr == "mvn") { #fix 
+  else if (distr == "mvn") {
     theta_star <- dnorm(n,mean = theta_cur, sd = cand.sd) #same thing
   }
   else if (distr == "gamma") {

@@ -1,4 +1,7 @@
 # met_hastings
+
+_NOTE: There have been multiple changes past the due date for Biostat 625, this is due to the fact that I've been working on this project for uses in another class (Biostat 682).  Additions include: more examples, adjusted support for multivariate distirbution, and acceptance rate._
+
 Intuitive Metropolis Hastings Simulation package for bios625
 
 The Metropolis-Hastings algorithmn is a Markov chain Monte Carlo method commonly used in bayesian statistics to obtain a probability distribution for the posterior distirbution when it is hard 

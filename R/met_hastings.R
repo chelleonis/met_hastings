@@ -91,17 +91,18 @@ met_hastings <- function(nsims = 1000, start = 1, burn_in = 0, jump = "normal", 
   theta_current <- start
   draws <- matrix(rep(NA,(nsims+1)*cols), ncol = cols)
   #create an empty vector to store whether a proposed theta has been accepted or not
-  accept <- rep(NA,nsims)
+  naccept <- rep(NA,nsims-burn_in)
   #steps 2-4 in update_theta
   #step 5, repeat for preset number of draws
   for (i in 1:nsims) {
-   theta_current <- update_theta(theta_current, jump, jparams,  
-                distr, dparams, likelihood, accept)
+   theta_current <- update_theta(theta_current[1:cols], jump, jparams,  
+                distr, dparams, likelihood, naccept)
    draws[i,] <- theta_current[1:cols]
-   accept[i] <- theta_current[cols:cols+1] 
+   if(i > burn_in) {
+    naccept[i-burn_in] <- theta_current[cols:cols+1] 
+   }
   }
-  
-  print(paste0("Acceptance Rate: ", sum(accept)/nsims))
+  print(paste0("Acceptance Rate: ", sum(naccept)/(nsims-burn_in)))
   return(draws[(burn_in + 1):nsims,])
 }
 
