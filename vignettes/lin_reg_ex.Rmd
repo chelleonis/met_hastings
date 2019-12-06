@@ -85,7 +85,7 @@ Plots of our draws (without burn-in)
 
 ```{r, echo = FALSE, fig.height = 3, fig.width = 5}
 slopes <- met_hastings(nsims = 150, start = c(1,1), burn_in = 0,
-             jump = "mvn", jparams = c(0.5,0.5),
+             jump = "mvn", jparams = 0.5*diag(2),
              distr = "custom", dparams = matrix(c(xsim,ysim),ncol = 2) , likelihood = posterior)
 plot(slopes[,1], type = "l", main = "Intercept (b0) Draws")
 plot(slopes[,2], type = "l", main = "Slope (b1) Draws")
